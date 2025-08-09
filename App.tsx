@@ -7,30 +7,31 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
+import Login from './src/screens/Login';
+import AppNavigation from './src/navigations';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
-
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? '#000000' : '#FFFFFF',
-  };
+    backgroundColor: isDarkMode ? '#00000' : '#FFFFF',
+  }
 
   return (
     <>
-    {/* <SafeAreaView style={[styles.container, backgroundStyle]}> */}
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-       <View style={styles.content}>
-        <Text style={[styles.title, { color: isDarkMode ? '#FFFFFF' : '#000000' }]}>
-          Welcome to React Native!
-        </Text>
-       </View>
-    {/* </SafeAreaView> */}
+      {/* <SafeAreaView style={[styles.container, backgroundStyle]}>
+        <StatusBar
+          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+          backgroundColor={''}
+        /> */}
 
+
+      {/* <Login /> */}
+      <AppNavigation />
+
+
+      {/* </SafeAreaView> */}
     </>
-      );
+  );
 }
 
 const styles = StyleSheet.create({
@@ -41,15 +42,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 20,
+    // paddingHorizontal: 20,
   },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 10,
-  },
-  
+
 });
 
 export default App;
