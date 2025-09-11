@@ -11,8 +11,10 @@ import {
   Alert,
   Dimensions,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native'
 
 function SingUp() {
+  const navigation = useNavigation<any>()
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -57,6 +59,7 @@ function SingUp() {
     }
 
     Alert.alert('Success', 'Account created successfully!');
+    navigation.navigate('Login')
   };
 
   return (
@@ -227,7 +230,7 @@ function SingUp() {
 
             <View style={styles.loginContainer}>
               <Text style={styles.loginText}>Already have an account? </Text>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('Login')}>
                 <Text style={styles.loginLink}>Sign In</Text>
               </TouchableOpacity>
             </View>

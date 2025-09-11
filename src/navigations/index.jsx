@@ -14,7 +14,7 @@ const AppNavigation = () => {
       <NavigationContainer>
         <Stack.Navigator
           screenOptions={{ headerShown: false }}
-          initialRouteName="SingUp"
+          initialRouteName="Login"
         >
           <Stack.Screen
             options={{ headerShown: false }}

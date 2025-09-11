@@ -1,7 +1,9 @@
-import { StyleSheet, Text, TouchableOpacity, View, Animated, useColorScheme, Dimensions } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, Animated, useColorScheme, Dimensions, ScrollView, KeyboardAvoidingView, Platform } from 'react-native'
 import React, { useState, useRef, useEffect } from 'react'
+import { useNavigation } from '@react-navigation/native'
 
 function Landing() {
+    const navigation = useNavigation<any>()
     const [count, setCount] = useState(0)
     const [borderColorIndex, setBorderColorIndex] = useState(0)
     const [screenData, setScreenData] = useState(Dimensions.get('window'))
@@ -12,25 +14,25 @@ function Landing() {
     const rotateAnim = useRef(new Animated.Value(0)).current
     const glowRotateAnim = useRef(new Animated.Value(0)).current
 
-    // Array of beautiful border colors that cycle through
+    // Array of Islamic-themed border colors that cycle through
     const borderColors = [
         '#ffd700', // Gold
-        '#ff6b6b', // Red
-        '#4ecdc4', // Teal
-        '#45b7d1', // Blue
-        '#96ceb4', // Green
-        '#ffeaa7', // Yellow
-        '#fd79a8', // Pink
-        '#fdcb6e', // Orange
-        '#6c5ce7', // Purple
-        '#a29bfe', // Light Purple
-        '#fd79a8', // Hot Pink
-        '#00b894', // Emerald
+        '#1a472a', // Islamic Green
+        '#8B4513', // Brown
+        '#DAA520', // Goldenrod
+        '#228B22', // Forest Green
+        '#B8860B', // Dark Goldenrod
+        '#006400', // Dark Green
+        '#FFD700', // Gold
+        '#32CD32', // Lime Green
+        '#9ACD32', // Yellow Green
+        '#ADFF2F', // Green Yellow
+        '#7CFC00', // Lawn Green
     ]
 
     useEffect(() => {
         // Listen for orientation changes
-        const onChange = (result) => {
+        const onChange = (result: any) => {
             setScreenData(result.window)
         }
 
@@ -137,6 +139,7 @@ function Landing() {
             width: glowSize,
             height: glowSize,
             marginBottom: isLandscape ? 15 : 40,
+            alignSelf: 'center' as const,
         },
         glowRing: {
             width: glowSize,
@@ -154,9 +157,9 @@ function Landing() {
         buttonContainer: {
             marginBottom: isLandscape ? 10 : 30,
             paddingHorizontal: width * 0.05,
-            flexDirection: isLandscape ? 'row' : 'row',
-            justifyContent: 'space-around',
-            alignItems: 'center',
+            flexDirection: 'row' as const,
+            justifyContent: 'space-around' as const,
+            alignItems: 'center' as const,
             width: '100%',
         },
         button: {
@@ -174,107 +177,164 @@ function Landing() {
         },
         infoContainer: {
             marginTop: isLandscape ? 10 : 20,
-            paddingHorizontal: width * 0.1,
+            paddingHorizontal: width * 0.05,
+            alignItems: 'center' as const,
+            flexDirection: isLandscape ? 'row' as const : 'row' as const,
+            justifyContent: 'center' as const,
+            gap: isLandscape ? 15 : 20,
+        },
+        navigationContainer: {
+            marginTop: isLandscape ? 15 : 30,
+            paddingHorizontal: width * 0.05,
+            flexDirection: isLandscape ? 'row' as const : 'row' as const,
+            justifyContent: 'center' as const,
+            gap: isLandscape ? 10 : 15,
+        },
+        infoItem: {
+            minWidth: isLandscape ? 100 : 120,
+            maxWidth: isLandscape ? 140 : 160,
+            flex: 1,
         },
     }
 
     return (
-        <View style={[styles.main, isDarkMode && styles.mainDark]}>
-            <Animated.View
-                style={[
-                    styles.container,
-                    dynamicStyles.mainContainer,
-                    {
-                        opacity: fadeAnim,
-                        transform: [{ translateY: slideAnim }]
-                    }
-                ]}
+        <KeyboardAvoidingView
+            style={styles.main}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
+            <View style={styles.overlay} />
+            <View style={styles.islamicPattern} />
+            <ScrollView
+                contentContainerStyle={styles.scrollContainer}
+                showsVerticalScrollIndicator={false}
             >
-                <Text style={[styles.title, isDarkMode && styles.titleDark, dynamicStyles.title]}>
-                    Counter
-                </Text>
+                <View style={styles.header}>
+                    <View style={styles.iconContainer}>
+                        <View style={styles.kalmaTop}>
+                            <Text style={styles.kalmaText}>لَا إِلَٰهَ إِلَّا ٱللَّٰهُ</Text>
+                        </View>
+                        <View style={styles.kalmaLeft}>
+                            <Text style={styles.kalmaTextVertical}>مُحَمَّدٌ</Text>
+                        </View>
+                        <Text style={styles.icon}>🕌</Text>
+                        <View style={styles.kalmaRight}>
+                            <Text style={styles.kalmaTextVertical}>رَسُولُ ٱللَّٰهِ</Text>
+                        </View>
+                        <View style={styles.kalmaBottom}>
+                            <Text style={styles.kalmaText}>مُحَمَّدٌ رَسُولُ ٱللَّٰهِ</Text>
+                        </View>
+                    </View>
+                    <Text style={styles.title}>ٱلسَّلَامُ عَلَيْكُمْ</Text>
+                    <Text style={styles.subtitle}>Welcome to our blessed community</Text>
+                </View>
 
-                <Animated.View
-                    style={[
-                        styles.counterContainer,
-                        dynamicStyles.counterContainer,
-                        { transform: [{ scale: scaleAnim }] }
-                    ]}
-                >
-                    {/* Outer glow ring with rotation */}
-                    <Animated.View style={[
-                        styles.glowRing,
-                        dynamicStyles.glowRing,
-                        {
-                            borderColor: borderColors[borderColorIndex],
-                            transform: [{ rotate: glowRotateInterpolate }]
-                        }
-                    ]} />
+                <View style={styles.formCard}>
+                    <View style={styles.formHeader}>
+                        <Text style={styles.formTitle}>بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</Text>
+                    </View>
 
-                    {/* Main counter - now stationary */}
-                    <View style={[
-                        styles.counter,
-                        dynamicStyles.counter,
-                        isDarkMode && styles.counterDark,
-                        {
-                            borderColor: borderColors[borderColorIndex]
-                        }
-                    ]}>
-                        {/* Inner gradient background */}
-                        <View style={[styles.innerHex, isDarkMode && styles.innerHexDark]}>
-                            <Text style={[styles.counterText, isDarkMode && styles.counterTextDark, dynamicStyles.counterText]}>
-                                {count}
+                    <View style={styles.counterWrapper}>
+                        <Animated.View
+                            style={[
+                                styles.counterContainer,
+                                dynamicStyles.counterContainer,
+                                {
+                                    opacity: fadeAnim,
+                                    transform: [{ translateY: slideAnim }, { scale: scaleAnim }]
+                                }
+                            ]}
+                        >
+                            {/* Outer glow ring with rotation */}
+                            <Animated.View style={[
+                                styles.glowRing,
+                                dynamicStyles.glowRing,
+                                {
+                                    borderColor: borderColors[borderColorIndex],
+                                    transform: [{ rotate: glowRotateInterpolate }]
+                                }
+                            ]} />
+
+                            {/* Main counter - now stationary */}
+                            <View style={[
+                                styles.counter,
+                                dynamicStyles.counter,
+                                {
+                                    borderColor: borderColors[borderColorIndex]
+                                }
+                            ]}>
+                                {/* Inner gradient background */}
+                                <View style={styles.innerHex}>
+                                    <Text style={[styles.counterText, dynamicStyles.counterText]}>
+                                        {count}
+                                    </Text>
+                                </View>
+
+                                {/* Corner accents */}
+                                <View style={[styles.cornerAccent, styles.topLeft, { backgroundColor: borderColors[borderColorIndex] }]} />
+                                <View style={[styles.cornerAccent, styles.topRight, { backgroundColor: borderColors[borderColorIndex] }]} />
+                                <View style={[styles.cornerAccent, styles.bottomLeft, { backgroundColor: borderColors[borderColorIndex] }]} />
+                                <View style={[styles.cornerAccent, styles.bottomRight, { backgroundColor: borderColors[borderColorIndex] }]} />
+                            </View>
+                        </Animated.View>
+                    </View>
+
+                    <View style={[styles.buttonContainer, dynamicStyles.buttonContainer]}>
+                        <TouchableOpacity
+                            style={[styles.button, styles.decrementButton, dynamicStyles.button]}
+                            onPress={decrement}
+                            activeOpacity={0.8}
+                        >
+                            <Text style={[styles.buttonText, dynamicStyles.buttonText]}>−</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={[styles.button, styles.resetButton, dynamicStyles.resetButton]}
+                            onPress={reset}
+                            activeOpacity={0.8}
+                        >
+                            <Text style={[styles.buttonText, styles.resetButtonText, dynamicStyles.buttonText]}>Reset</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={[styles.button, styles.incrementButton, dynamicStyles.button]}
+                            onPress={increment}
+                            activeOpacity={0.8}
+                        >
+                            <Text style={[styles.buttonText, dynamicStyles.buttonText]}>+</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    <View style={[styles.infoContainer, dynamicStyles.infoContainer]}>
+                        <View style={[styles.infoItem, dynamicStyles.infoItem]}>
+                            <Text style={styles.infoLabel}>Current Value</Text>
+                            <Text style={styles.infoValue}>{count}</Text>
+                        </View>
+                        <View style={[styles.infoItem, dynamicStyles.infoItem]}>
+                            <Text style={styles.infoLabel}>Status</Text>
+                            <Text style={styles.infoValue}>
+                                {count === 0 ? 'Zero' : count > 0 ? 'Positive' : 'Negative'}
                             </Text>
                         </View>
-
-                        {/* Corner accents */}
-                        <View style={[styles.cornerAccent, styles.topLeft, { backgroundColor: borderColors[borderColorIndex] }]} />
-                        <View style={[styles.cornerAccent, styles.topRight, { backgroundColor: borderColors[borderColorIndex] }]} />
-                        <View style={[styles.cornerAccent, styles.bottomLeft, { backgroundColor: borderColors[borderColorIndex] }]} />
-                        <View style={[styles.cornerAccent, styles.bottomRight, { backgroundColor: borderColors[borderColorIndex] }]} />
                     </View>
-                </Animated.View>
 
-                <View style={[styles.buttonContainer, dynamicStyles.buttonContainer]}>
-                    <TouchableOpacity
-                        style={[styles.button, styles.decrementButton, dynamicStyles.button]}
-                        onPress={decrement}
-                        activeOpacity={0.8}
-                    >
-                        <Text style={[styles.buttonText, dynamicStyles.buttonText]}>−</Text>
-                    </TouchableOpacity>
+                    <View style={[styles.navigationContainer, dynamicStyles.navigationContainer]}>
+                        <TouchableOpacity
+                            style={styles.navButton}
+                            onPress={() => navigation.navigate('Login')}
+                        >
+                            <Text style={styles.navButtonText}>🕌 SignUp  In </Text>
+                        </TouchableOpacity>
 
-                    <TouchableOpacity
-                        style={[styles.button, styles.resetButton, dynamicStyles.resetButton]}
-                        onPress={reset}
-                        activeOpacity={0.8}
-                    >
-                        <Text style={[styles.buttonText, styles.resetButtonText, dynamicStyles.buttonText]}>Reset</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={[styles.button, styles.incrementButton, dynamicStyles.button]}
-                        onPress={increment}
-                        activeOpacity={0.8}
-                    >
-                        <Text style={[styles.buttonText, dynamicStyles.buttonText]}>+</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={[styles.infoContainer, dynamicStyles.infoContainer]}>
-                    <View style={styles.infoItem}>
-                        <Text style={[styles.infoLabel, isDarkMode && styles.infoLabelDark]}>Current Value</Text>
-                        <Text style={[styles.infoValue, isDarkMode && styles.infoValueDark]}>{count}</Text>
-                    </View>
-                    <View style={styles.infoItem}>
-                        <Text style={[styles.infoLabel, isDarkMode && styles.infoLabelDark]}>Status</Text>
-                        <Text style={[styles.infoValue, isDarkMode && styles.infoValueDark]}>
-                            {count === 0 ? 'Zero' : count > 0 ? 'Positive' : 'Negative'}
-                        </Text>
+                        <TouchableOpacity
+                            style={styles.navButton}
+                            onPress={() => navigation.navigate('SingUp')}
+                        >
+                            <Text style={styles.navButtonText}>📝 Create Account</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
-            </Animated.View>
-        </View>
+            </ScrollView>
+        </KeyboardAvoidingView>
     )
 }
 
@@ -283,33 +343,55 @@ function Landing() {
 const styles = StyleSheet.create({
     main: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#667eea',
+        backgroundColor: '#1a472a', // Islamic green
     },
-    mainDark: {
-        backgroundColor: '#1a1a2e',
+    overlay: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(255, 255, 255, 0.05)',
     },
-    container: {
-        flex: 1,
+    islamicPattern: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(26, 71, 42, 0.1)',
+    },
+    scrollContainer: {
+        flexGrow: 1,
+        paddingHorizontal: 20,
+        paddingTop: 60,
+        paddingBottom: 30,
+    },
+    header: {
         alignItems: 'center',
+        marginBottom: 40,
     },
     title: {
-        fontSize: 28,
-        fontWeight: '600',
+        fontSize: 36,
+        fontWeight: '800',
         color: '#ffffff',
-        marginBottom: 30,
+        marginBottom: 8,
+        fontFamily: Platform.OS === 'ios' ? 'Helvetica-Bold' : 'Roboto-Bold',
+        letterSpacing: 1,
+        textShadowColor: 'rgba(0, 0, 0, 0.3)',
+        textShadowOffset: { width: 0, height: 2 },
+        textShadowRadius: 4,
         textAlign: 'center',
-        letterSpacing: 3,
-        textTransform: 'uppercase',
-        textShadowColor: 'rgba(0, 0, 0, 0.4)',
-        textShadowOffset: { width: 0, height: 3 },
-        textShadowRadius: 6,
-        opacity: 0.9,
+        writingDirection: 'rtl',
     },
-    titleDark: {
+    subtitle: {
+        fontSize: 18,
         color: '#ffffff',
-        textShadowColor: 'rgba(255, 255, 255, 0.1)',
+        textAlign: 'center',
+        fontFamily: Platform.OS === 'ios' ? 'Helvetica-Light' : 'Roboto-Light',
+        fontWeight: '300',
+        letterSpacing: 0.5,
+        opacity: 0.9,
     },
     counterContainer: {
         justifyContent: 'center',
@@ -328,6 +410,8 @@ const styles = StyleSheet.create({
     },
     counter: {
         position: 'absolute',
+        top: 0,
+        left: 0,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 25,
@@ -341,22 +425,15 @@ const styles = StyleSheet.create({
         elevation: 25,
         overflow: 'visible',
     },
-    counterDark: {
-        backgroundColor: 'rgba(45, 45, 58, 0.95)',
-    },
     innerHex: {
         width: '85%',
         height: '85%',
         borderRadius: 20,
-        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+        backgroundColor: 'rgba(26, 71, 42, 0.1)',
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 2,
-        borderColor: 'rgba(255, 255, 255, 0.3)',
-    },
-    innerHexDark: {
-        backgroundColor: 'rgba(255, 107, 107, 0.1)',
-        borderColor: 'rgba(255, 255, 255, 0.1)',
+        borderColor: 'rgba(255, 215, 0, 0.3)',
     },
     cornerAccent: {
         position: 'absolute',
@@ -384,13 +461,10 @@ const styles = StyleSheet.create({
     counterText: {
         fontSize: 48,
         fontWeight: 'bold',
-        color: '#667eea',
+        color: '#1a472a',
         textShadowColor: 'rgba(0, 0, 0, 0.1)',
         textShadowOffset: { width: 0, height: 1 },
         textShadowRadius: 2,
-    },
-    counterTextDark: {
-        color: '#ff6b6b',
     },
     buttonContainer: {
         flexDirection: 'row',
@@ -425,35 +499,170 @@ const styles = StyleSheet.create({
     },
     infoContainer: {
         flexDirection: 'row',
-        justifyContent: 'space-around',
+        justifyContent: 'center',
+        alignItems: 'center',
         width: '100%',
         marginTop: 20,
+        gap: 20,
     },
     infoItem: {
         alignItems: 'center',
         backgroundColor: 'rgba(255, 255, 255, 0.2)',
         paddingVertical: 15,
-        paddingHorizontal: 20,
+        paddingHorizontal: 16,
         borderRadius: 15,
-        minWidth: 120,
+        borderWidth: 2,
+        // borderColor: 'rgba(255, 215, 0, 0.6)',
+        // shadowColor: '#000',
+        // shadowOffset: { width: 0, height: 4 },
+        // shadowOpacity: 0.2,
+        // shadowRadius: 8,
+        // elevation: 5,
     },
     infoLabel: {
-        color: '#ffffff',
+        color: '#2c3e50',
         fontSize: 14,
         fontWeight: '600',
         marginBottom: 5,
         opacity: 0.9,
     },
-    infoLabelDark: {
-        color: '#f0f0f0',
-    },
     infoValue: {
-        color: '#ffffff',
+        color: '#1a472a',
         fontSize: 18,
         fontWeight: 'bold',
     },
-    infoValueDark: {
-        color: '#ff6b6b',
+    // Islamic theme styles
+    iconContainer: {
+        width: 120,
+        height: 120,
+        borderRadius: 60,
+        backgroundColor: 'rgba(255, 215, 0, 0.2)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 20,
+        borderWidth: 3,
+        borderColor: 'rgba(255, 215, 0, 0.6)',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+        elevation: 8,
+        position: 'relative',
+    },
+    kalmaTop: {
+        position: 'absolute',
+        top: 5,
+        left: 0,
+        right: 0,
+        alignItems: 'center',
+    },
+    kalmaBottom: {
+        position: 'absolute',
+        bottom: 5,
+        left: 0,
+        right: 0,
+        alignItems: 'center',
+    },
+    kalmaLeft: {
+        position: 'absolute',
+        left: 5,
+        top: 0,
+        bottom: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    kalmaRight: {
+        position: 'absolute',
+        right: 5,
+        top: 0,
+        bottom: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    kalmaText: {
+        fontSize: 9,
+        color: 'rgba(255, 215, 0, 0.9)',
+        fontFamily: Platform.OS === 'ios' ? 'Helvetica' : 'Roboto-Regular',
+        fontWeight: '600',
+        textAlign: 'center',
+        lineHeight: 11,
+        writingDirection: 'rtl',
+    },
+    kalmaTextVertical: {
+        fontSize: 8,
+        color: 'rgba(255, 215, 0, 0.9)',
+        fontFamily: Platform.OS === 'ios' ? 'Helvetica' : 'Roboto-Regular',
+        fontWeight: '600',
+        textAlign: 'center',
+        lineHeight: 10,
+        writingDirection: 'rtl',
+    },
+    icon: {
+        fontSize: 40,
+    },
+    formCard: {
+        backgroundColor: 'lightgrey',
+        borderRadius: 20,
+        padding: 25,
+        marginHorizontal: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 0.2,
+        shadowRadius: 20,
+        elevation: 15,
+    },
+    formHeader: {
+        alignItems: 'center',
+        marginBottom: 25,
+    },
+    formTitle: {
+        fontSize: 24,
+        fontWeight: '700',
+        color: '#2c3e50',
+        fontFamily: Platform.OS === 'ios' ? 'Helvetica-Bold' : 'Roboto-Bold',
+        marginBottom: 5,
+        textAlign: 'center',
+        writingDirection: 'rtl',
+    },
+    
+    counterWrapper: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginVertical: 20,
+    },
+    navigationContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 30,
+        paddingHorizontal: 20,
+        gap: 15,
+    },
+    navButton: {
+        backgroundColor: '#3498db',
+        borderRadius: 12,
+        paddingVertical: 12,
+        paddingHorizontal: 16,
+        alignItems: 'center',
+        justifyContent: 'center',
+        shadowColor: '#3498db',
+        shadowOffset: {
+            width: 0,
+            height: 4,
+        },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+        elevation: 8,
+        flex: 1,
+        minHeight: 48,
+    },
+    navButtonText: {
+        color: '#ffffff',
+        fontSize: 16,
+        fontWeight: '700',
+        fontFamily: Platform.OS === 'ios' ? 'Helvetica-Bold' : 'Roboto-Bold',
+        letterSpacing: 0.5,
+        textAlign: 'center',
     },
 })
 
