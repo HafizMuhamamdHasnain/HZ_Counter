@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "270777183328",
+    "project_id": "uifirst010",
+    "storage_bucket": "uifirst010.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:270777183328:android:9dfdbcdb2a2c5f7a6fe705",
+        "android_client_info": {
+          "package_name": "com.uifirst"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "270777183328-1kauqd7vpaq4o71r6neo26lgq533qcjl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uifirst",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "270777183328-a84vkdvepi23nclgo6gha1amokremmdo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdL1M1WDK1dWY9rOHrQxtola0gzbKWKWk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "270777183328-a84vkdvepi23nclgo6gha1amokremmdo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

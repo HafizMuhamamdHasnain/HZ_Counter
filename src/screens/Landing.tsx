@@ -1,12 +1,15 @@
-import { StyleSheet, Text, TouchableOpacity, View, Animated, useColorScheme, Dimensions, ScrollView, KeyboardAvoidingView, Platform } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, Animated, useColorScheme, Dimensions, ScrollView, KeyboardAvoidingView, Platform, Alert } from 'react-native'
 import React, { useState, useRef, useEffect } from 'react'
 import { useNavigation } from '@react-navigation/native'
+import { GoogleSignin } from '@react-native-google-signin/google-signin'
+import auth from '@react-native-firebase/auth'
 
 function Landing() {
     const navigation = useNavigation<any>()
     const [count, setCount] = useState(0)
     const [borderColorIndex, setBorderColorIndex] = useState(0)
     const [screenData, setScreenData] = useState(Dimensions.get('window'))
+    const [userName, setUserName] = useState<string | null>(null)
     const isDarkMode = useColorScheme() === 'dark'
     const scaleAnim = useRef(new Animated.Value(1)).current
     const fadeAnim = useRef(new Animated.Value(0)).current
@@ -37,6 +40,12 @@ function Landing() {
         }
 
         const subscription = Dimensions.addEventListener('change', onChange)
+
+        // Listen for Firebase auth state to get user display name/email
+        const unsubscribeAuth = auth().onAuthStateChanged(user => {
+            const nameFromAuth = user?.displayName || user?.email || null
+            setUserName(nameFromAuth)
+        })
 
         // Initial animations
         Animated.parallel([
@@ -71,7 +80,7 @@ function Landing() {
 
         startRotationAnimations()
 
-        return () => subscription?.remove()
+        return () => { subscription?.remove(); unsubscribeAuth() }
     }, [])
 
     const animateCounter = () => {
@@ -197,6 +206,17 @@ function Landing() {
         },
     }
 
+    const handleLogout = async () => {
+        try {
+            await auth().signOut()
+            try { await GoogleSignin.revokeAccess() } catch (e) { }
+            try { await GoogleSignin.signOut() } catch (e) { }
+            navigation.reset({ index: 0, routes: [{ name: 'Login' }] })
+        } catch (e: any) {
+            Alert.alert('Logout Error', e?.message ?? 'Unable to logout')
+        }
+    }
+
     return (
         <KeyboardAvoidingView
             style={styles.main}
@@ -209,6 +229,15 @@ function Landing() {
                 showsVerticalScrollIndicator={false}
             >
                 <View style={styles.header}>
+                    <View style={styles.headerTop}>
+                        <View style={styles.headerSpacer} />
+                        <TouchableOpacity
+                            style={styles.logoutButtonTop}
+                            onPress={handleLogout}
+                        >
+                            <Text style={styles.logoutButtonText}>🚪 Logout</Text>
+                        </TouchableOpacity>
+                    </View>
                     <View style={styles.iconContainer}>
                         <View style={styles.kalmaTop}>
                             <Text style={styles.kalmaText}>لَا إِلَٰهَ إِلَّا ٱللَّٰهُ</Text>
@@ -225,7 +254,13 @@ function Landing() {
                         </View>
                     </View>
                     <Text style={styles.title}>ٱلسَّلَامُ عَلَيْكُمْ</Text>
-                    <Text style={styles.subtitle}>Welcome to our blessed community</Text>
+                    {userName ? (
+                        <Text style={styles.userNameText} numberOfLines={1} ellipsizeMode='tail'>
+                            Welcome, {userName}
+                        </Text>
+                    ) : <Text style={styles.subtitle}>Welcome to our blessed community</Text>
+                    }
+
                 </View>
 
                 <View style={styles.formCard}>
@@ -371,6 +406,36 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 40,
     },
+    headerTop: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
+        marginBottom: 20,
+    },
+    headerSpacer: {
+        flex: 1,
+    },
+    logoutButtonTop: {
+        backgroundColor: '#1a472a',
+        borderRadius: 8,
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        shadowColor: '#e74c3c',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+        elevation: 4,
+    },
+    logoutButtonText: {
+        color: '#ffffff',
+        fontSize: 14,
+        fontWeight: '600',
+        fontFamily: Platform.OS === 'ios' ? 'Helvetica-Medium' : 'Roboto-Medium',
+    },
     title: {
         fontSize: 36,
         fontWeight: '800',
@@ -392,6 +457,14 @@ const styles = StyleSheet.create({
         fontWeight: '300',
         letterSpacing: 0.5,
         opacity: 0.9,
+    },
+    userNameText: {
+        fontSize: 20,
+        color: '#ffd700',
+        textAlign: 'center',
+        fontFamily: Platform.OS === 'ios' ? 'Helvetica-Bold' : 'Roboto-Bold',
+        fontWeight: '800',
+        marginBottom: 6,
     },
     counterContainer: {
         justifyContent: 'center',
@@ -624,7 +697,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         writingDirection: 'rtl',
     },
-    
+
     counterWrapper: {
         alignItems: 'center',
         justifyContent: 'center',

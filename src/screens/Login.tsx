@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -10,44 +10,94 @@ import {
   Platform,
   Alert,
   Image,
-} from 'react-native'
-import { useNavigation } from '@react-navigation/native'
+  // useEffect
+} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { GoogleSignin, statusCodes, GoogleSigninButton } from '@react-native-google-signin/google-signin';
+import auth from '@react-native-firebase/auth';
+
 
 function Login() {
-  const navigation = useNavigation<any>()
+
+
+  const navigation = useNavigation<any>();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-  })
-  const [showPassword, setShowPassword] = useState(false)
+  });
+  const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: '270777183328-a84vkdvepi23nclgo6gha1amokremmdo.apps.googleusercontent.com',
+      offlineAccess: false,
+      forceCodeForRefreshToken: false,
+    });
+  }, []);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
       [field]: value,
-    }))
-  }
+    }));
+  };
+
+
 
   const handleLogin = () => {
     if (!formData.email || !formData.password) {
-      Alert.alert('Error', 'Please enter email and password')
-      return
+      Alert.alert('Error', 'Please enter email and password');
+      return;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      Alert.alert('Error', 'Please enter a valid email address')
-      return
+      Alert.alert('Error', 'Please enter a valid email address');
+      return;
     }
 
     if (formData.password.length < 6) {
-      Alert.alert('Error', 'Password must be at least 6 characters long')
-      return
+      Alert.alert('Error', 'Password must be at least 6 characters long');
+      return;
     }
 
-    Alert.alert('Success', 'Logged in successfully!')
-    navigation.navigate('Landing')
-  }
+    Alert.alert('Success', 'Logged in successfully!');
+    navigation.navigate('Landing');
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+      const result = await GoogleSignin.signIn();
+
+      if (result.type !== 'success') {
+        return;
+      }
+
+      const { idToken } = result.data;
+      if (!idToken) {
+        Alert.alert('Google Sign-In', 'No idToken returned');
+        return;
+      }
+      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+      await auth().signInWithCredential(googleCredential);
+      navigation.navigate('Landing');
+    } catch (error: any) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        return;
+      }
+      if (error.code === statusCodes.IN_PROGRESS) {
+        return;
+      }
+      if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        Alert.alert('Google Play Services', 'Not available or outdated');
+        return;
+      }
+      Alert.alert('Google Sign-In Error', error?.message ?? 'Unknown error');
+    }
+  };
+
+
 
   return (
     <KeyboardAvoidingView
@@ -60,21 +110,13 @@ function Login() {
         contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.header}>
-
-          {/* <Image
+        {/* <Image
             source={require('../../src/assets/counter-high-resolution-logo-transparent.png')}
           /> */}
 
+        <View style={styles.header}>
           <View style={styles.iconContainer}>
-
-
-            <Image
-              source={require('../../src/assets/counter-high-resolution-logo-transparent.png')}
-              style={{ width: 80, height: 80, marginBottom: 8, alignSelf: 'center' }}
-            />
-
-            {/* <View style={styles.kalmaTop}>
+            <View style={styles.kalmaTop}>
               <Text style={styles.kalmaText}>لَا إِلَٰهَ إِلَّا ٱللَّٰهُ</Text>
             </View>
             <View style={styles.kalmaLeft}>
@@ -86,7 +128,7 @@ function Login() {
             </View>
             <View style={styles.kalmaBottom}>
               <Text style={styles.kalmaText}>مُحَمَّدٌ رَسُولُ ٱللَّٰهِ</Text>
-            </View> */}
+            </View>
           </View>
 
           <Text style={styles.title}>مَرْحَبًا</Text>
@@ -106,7 +148,7 @@ function Login() {
                 style={styles.input}
                 placeholder="Enter email address"
                 value={formData.email}
-                onChangeText={(value) => handleInputChange('email', value)}
+                onChangeText={value => handleInputChange('email', value)}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 placeholderTextColor="#bdc3c7"
@@ -120,7 +162,7 @@ function Login() {
                   style={styles.passwordInput}
                   placeholder="Enter password"
                   value={formData.password}
-                  onChangeText={(value) => handleInputChange('password', value)}
+                  onChangeText={value => handleInputChange('password', value)}
                   secureTextEntry={!showPassword}
                   placeholderTextColor="#bdc3c7"
                 />
@@ -128,13 +170,28 @@ function Login() {
                   style={styles.eyeButton}
                   onPress={() => setShowPassword(!showPassword)}
                 >
-                  <Text style={styles.eyeText}>{showPassword ? '👁️' : '👁️‍🗨️'}</Text>
+                  <Text style={styles.eyeText}>
+                    {showPassword ? '👁️' : '👁️‍🗨️'}
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>
 
             <TouchableOpacity style={styles.signInButton} onPress={handleLogin}>
               <Text style={styles.signInButtonText}>🕌 Sign In</Text>
+            </TouchableOpacity>
+
+            <View style={styles.dividerContainer}>
+              <View style={styles.dividerLine} />
+              <Text style={styles.dividerText}>or</Text>
+              <View style={styles.dividerLine} />
+            </View>
+
+            <TouchableOpacity style={styles.googleButton} onPress={handleGoogleLogin}>
+              <View style={styles.googleIconContainer}>
+                <Text style={styles.googleIcon}>G</Text>
+              </View>
+              <Text style={styles.googleButtonText}>Continue with Google</Text>
             </TouchableOpacity>
 
             <View style={styles.loginContainer}>
@@ -147,7 +204,7 @@ function Login() {
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
-  )
+  );
 }
 
 export default Login;
@@ -163,7 +220,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(255, 255, 255, 0.05)'
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
   },
   islamicPattern: {
     position: 'absolute',
@@ -171,7 +228,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(26, 71, 42, 0.1)'
+    backgroundColor: 'rgba(26, 71, 42, 0.1)',
   },
   scrollContainer: {
     flexGrow: 1,
@@ -392,4 +449,63 @@ const styles = StyleSheet.create({
     color: '#7f8c8d',
     fontFamily: Platform.OS === 'ios' ? 'Helvetica' : 'Roboto-Regular',
   },
-})
+  dividerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 20,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#2c3e50',
+  },
+  dividerText: {
+    marginHorizontal: 15,
+    fontSize: 20,
+    color: '#7f8c8d',
+    fontFamily: Platform.OS === 'ios' ? 'Helvetica' : 'Roboto-Regular',
+    fontWeight: '500',
+  },
+  googleButton: {
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderColor: '#dadce0',
+    borderRadius: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  googleIconContainer: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: '#4285f4',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  googleIcon: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#ffffff',
+    fontFamily: Platform.OS === 'ios' ? 'Helvetica-Bold' : 'Roboto-Bold',
+  },
+  googleButtonText: {
+    color: '#3c4043',
+    fontSize: 16,
+    fontWeight: '500',
+    fontFamily: Platform.OS === 'ios' ? 'Helvetica-Medium' : 'Roboto-Medium',
+    letterSpacing: 0.3,
+  },
+});

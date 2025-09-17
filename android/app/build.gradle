@@ -72,6 +72,12 @@ def enableProguardInReleaseBuilds = false
  */
 def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
 
+
+plugins {
+    id 'com.android.application' // or use apply plugin: 'com.android.application'
+    id 'com.google.gms.google-services' // applies plugin to read google-services.json
+}
+
 android {
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -110,10 +116,21 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
+    
+    // Google Play Services for Google Sign-In
+    implementation 'com.google.android.gms:play-services-auth:20.7.0'
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
         implementation jscFlavor
     }
+
+    // Use Firebase BoM to manage versions (replace 34.2.0 with the latest if needed)
+    implementation platform('com.google.firebase:firebase-bom:34.2.0')
+
+    // Add the Firebase libraries you need (no versions when using BoM)
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-analytics'
+    // + other Firebase libs (firestore, messaging, etc.)
 }
