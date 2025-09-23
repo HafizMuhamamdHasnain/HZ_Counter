@@ -296,7 +296,7 @@ function Landing() {
                             style={styles.logoutButtonTop}
                             onPress={handleLogout}
                         >
-                            <Text style={styles.logoutButtonText}>🚪 Logout</Text>
+                            <Text style={styles.logoutButtonText}>🚪 LogOut</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.iconContainer}>
@@ -480,9 +480,11 @@ const styles = StyleSheet.create({
     logoutButtonTop: {
         backgroundColor: '#1a472a',
         borderRadius: 8,
+        borderWidth: 2,
+        borderColor: 'rgba(255, 215, 0, 0.6)',
         paddingVertical: 8,
         paddingHorizontal: 12,
-        shadowColor: '#e74c3c',
+        shadowColor: 'rgba(255, 215, 0, 0.6)',
         shadowOffset: {
             width: 0,
             height: 2,
@@ -492,7 +494,7 @@ const styles = StyleSheet.create({
         elevation: 4,
     },
     logoutButtonText: {
-        color: '#ffffff',
+        color: 'rgba(255, 215, 0, 0.6)',
         fontSize: 14,
         fontWeight: '600',
         fontFamily: Platform.OS === 'ios' ? 'Helvetica-Medium' : 'Roboto-Medium',
