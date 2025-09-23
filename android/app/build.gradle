@@ -1,6 +1,9 @@
-apply plugin: "com.android.application"
-apply plugin: "org.jetbrains.kotlin.android"
-apply plugin: "com.facebook.react"
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'com.facebook.react'
+    id 'com.google.gms.google-services'
+}
 
 /**
  * This is the configuration block to customize your React Native Android app.
@@ -72,12 +75,6 @@ def enableProguardInReleaseBuilds = false
  */
 def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
 
-
-plugins {
-    id 'com.android.application' // or use apply plugin: 'com.android.application'
-    id 'com.google.gms.google-services' // applies plugin to read google-services.json
-}
-
 android {
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -132,5 +129,6 @@ dependencies {
     // Add the Firebase libraries you need (no versions when using BoM)
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-analytics'
-    // + other Firebase libs (firestore, messaging, etc.)
+    implementation 'com.google.firebase:firebase-firestore'
+    // + other Firebase libs (messaging, etc.)
 }

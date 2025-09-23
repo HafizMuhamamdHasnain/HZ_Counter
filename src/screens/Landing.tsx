@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
 
 function Landing() {
     const navigation = useNavigation<any>()
@@ -42,9 +43,20 @@ function Landing() {
         const subscription = Dimensions.addEventListener('change', onChange)
 
         // Listen for Firebase auth state to get user display name/email
-        const unsubscribeAuth = auth().onAuthStateChanged(user => {
+        const unsubscribeAuth = auth().onAuthStateChanged(async user => {
             const nameFromAuth = user?.displayName || user?.email || null
             setUserName(nameFromAuth)
+
+            // Load user's saved counter if logged in
+            try {
+                if (user?.uid) {
+                    const doc = await firestore().collection('users').doc(user.uid).get()
+                    const data = doc.data()
+                    if (typeof data?.counter === 'number') {
+                        setCount(data.counter)
+                    }
+                }
+            } catch (e) { }
         })
 
         // Initial animations
@@ -99,19 +111,68 @@ function Landing() {
     }
 
     const increment = () => {
-        setCount(count + 1)
+        const user = auth().currentUser
+        setCount(prev => {
+            const next = prev + 1
+            if (user?.uid) {
+                firestore().collection('users').doc(user.uid).set({
+                    counter: next,
+                    updatedAt: firestore.FieldValue.serverTimestamp(),
+                }, { merge: true })
+                    .then(() => {
+                        console.log('Successfully updated Firestore counter')
+                    })
+                    .catch(error => {
+                        console.error('Error updating counter in Firestore:', error)
+                        // Revert the count if Firestore update fails
+                        setCount(prev)
+                    })
+            }
+            return next
+        })
         // Cycle to next border color
         setBorderColorIndex((borderColorIndex + 1) % borderColors.length)
         animateCounter()
     }
 
     const decrement = () => {
-        setCount(count - 1)
+        const user = auth().currentUser
+        setCount(prev => {
+            const next = prev - 1
+            if (user?.uid) {
+                firestore().collection('users').doc(user.uid).set({
+                    counter: next,
+                    updatedAt: firestore.FieldValue.serverTimestamp(),
+                }, { merge: true })
+                    .then(() => {
+                        console.log('Successfully updated Firestore counter')
+                    })
+                    .catch(error => {
+                        console.error('Error updating counter in Firestore:', error)
+                        // Revert the count if Firestore update fails
+                        setCount(prev)
+                    })
+            }
+            return next
+        })
         animateCounter()
     }
 
     const reset = () => {
+        const user = auth().currentUser
         setCount(0)
+        if (user?.uid) {
+            firestore().collection('users').doc(user.uid).set({
+                counter: 0,
+                updatedAt: firestore.FieldValue.serverTimestamp(),
+            }, { merge: true })
+                .then(() => {
+                    console.log('Successfully reset Firestore counter')
+                })
+                .catch(error => {
+                    console.error('Error resetting counter in Firestore:', error)
+                })
+        }
         // Reset border color to initial gold
         setBorderColorIndex(0)
         animateCounter()
@@ -341,7 +402,7 @@ function Landing() {
 
                     <View style={[styles.infoContainer, dynamicStyles.infoContainer]}>
                         <View style={[styles.infoItem, dynamicStyles.infoItem]}>
-                            <Text style={styles.infoLabel}>Current Value</Text>
+                            <Text style={styles.infoLabel}>Current</Text>
                             <Text style={styles.infoValue}>{count}</Text>
                         </View>
                         <View style={[styles.infoItem, dynamicStyles.infoItem]}>
@@ -577,6 +638,7 @@ const styles = StyleSheet.create({
         width: '100%',
         marginTop: 20,
         gap: 20,
+        // backgroundColor: 'red',
     },
     infoItem: {
         alignItems: 'center',
