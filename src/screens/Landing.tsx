@@ -4,6 +4,23 @@ import { useNavigation } from '@react-navigation/native'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
+import { createDynamicStyles } from './Landing.styles.ts'
+
+// Array of Islamic-themed border colors that cycle through
+const BORDER_COLORS = [
+    '#ffd700', // Gold
+    '#1a472a', // Islamic Green
+    '#8B4513', // Brown
+    '#DAA520', // Goldenrod
+    '#228B22', // Forest Green
+    '#B8860B', // Dark Goldenrod
+    '#006400', // Dark Green
+    '#FFD700', // Gold
+    '#32CD32', // Lime Green
+    '#9ACD32', // Yellow Green
+    '#ADFF2F', // Green Yellow
+    '#7CFC00', // Lawn Green
+]
 
 function Landing() {
     const navigation = useNavigation<any>()
@@ -18,21 +35,7 @@ function Landing() {
     const rotateAnim = useRef(new Animated.Value(0)).current
     const glowRotateAnim = useRef(new Animated.Value(0)).current
 
-    // Array of Islamic-themed border colors that cycle through
-    const borderColors = [
-        '#ffd700', // Gold
-        '#1a472a', // Islamic Green
-        '#8B4513', // Brown
-        '#DAA520', // Goldenrod
-        '#228B22', // Forest Green
-        '#B8860B', // Dark Goldenrod
-        '#006400', // Dark Green
-        '#FFD700', // Gold
-        '#32CD32', // Lime Green
-        '#9ACD32', // Yellow Green
-        '#ADFF2F', // Green Yellow
-        '#7CFC00', // Lawn Green
-    ]
+
 
     useEffect(() => {
         // Listen for orientation changes
@@ -75,22 +78,7 @@ function Landing() {
         ]).start()
 
         // Continuous rotation animations
-        const startRotationAnimations = () => {
-            // Reset animation values
-            glowRotateAnim.setValue(0)
-
-            // Only rotate the outer glow ring
-            Animated.loop(
-                Animated.timing(glowRotateAnim, {
-                    toValue: 1,
-                    duration: 4000, // 4 seconds for full rotation (slightly slower for elegance)
-                    useNativeDriver: true,
-                }),
-                { resetBeforeIteration: true }
-            ).start()
-        }
-
-        startRotationAnimations()
+        startRotationAnimations(glowRotateAnim)
 
         return () => { subscription?.remove(); unsubscribeAuth() }
     }, [])
@@ -131,7 +119,7 @@ function Landing() {
             return next
         })
         // Cycle to next border color
-        setBorderColorIndex((borderColorIndex + 1) % borderColors.length)
+        setBorderColorIndex((borderColorIndex + 1) % BORDER_COLORS.length)
         animateCounter()
     }
 
@@ -195,77 +183,15 @@ function Landing() {
     const buttonSize = Math.max(minDimension * 0.15, 60)
 
     // Dynamic styles with proper calculations
-    const dynamicStyles = {
-        mainContainer: {
-            paddingHorizontal: width * 0.05,
-            paddingVertical: isLandscape ? height * 0.02 : height * 0.05,
-            justifyContent: isLandscape ? 'space-around' : 'center',
-        },
-        title: {
-            fontSize: Math.max(minDimension * 0.06, 20),
-            marginBottom: isLandscape ? 15 : 30,
-        },
-        counterContainer: {
-            width: glowSize,
-            height: glowSize,
-            marginBottom: isLandscape ? 15 : 40,
-            alignSelf: 'center' as const,
-        },
-        glowRing: {
-            width: glowSize,
-            height: glowSize,
-        },
-        counter: {
-            width: counterSize,
-            height: counterSize,
-            top: (glowSize - counterSize) / 2,
-            left: (glowSize - counterSize) / 2,
-        },
-        counterText: {
-            fontSize: Math.max(counterSize * 0.25, 24),
-        },
-        buttonContainer: {
-            marginBottom: isLandscape ? 10 : 30,
-            paddingHorizontal: width * 0.05,
-            flexDirection: 'row' as const,
-            justifyContent: 'space-around' as const,
-            alignItems: 'center' as const,
-            width: '100%',
-        },
-        button: {
-            width: buttonSize,
-            height: buttonSize,
-            borderRadius: buttonSize / 2,
-        },
-        resetButton: {
-            width: buttonSize * 1.4,
-            height: buttonSize,
-            borderRadius: buttonSize / 2,
-        },
-        buttonText: {
-            fontSize: Math.max(buttonSize * 0.3, 16),
-        },
-        infoContainer: {
-            marginTop: isLandscape ? 10 : 20,
-            paddingHorizontal: width * 0.05,
-            alignItems: 'center' as const,
-            flexDirection: isLandscape ? 'row' as const : 'row' as const,
-            justifyContent: 'center' as const,
-            gap: isLandscape ? 15 : 20,
-        },
-        navigationContainer: {
-            marginTop: isLandscape ? 15 : 30,
-            paddingHorizontal: width * 0.05,
-            flexDirection: isLandscape ? 'row' as const : 'row' as const,
-            justifyContent: 'center' as const,
-            gap: isLandscape ? 10 : 15,
-        },
-        infoItem: {
-            minWidth: isLandscape ? 100 : 120,
-            maxWidth: isLandscape ? 140 : 160,
-            flex: 1,
-        },
-    }
+    const dynamicStyles = createDynamicStyles({
+        width,
+        height,
+        isLandscape,
+        minDimension,
+        counterSize,
+        glowSize,
+        buttonSize,
+    })
 
     const handleLogout = async () => {
         try {
@@ -345,7 +271,7 @@ function Landing() {
                                 styles.glowRing,
                                 dynamicStyles.glowRing,
                                 {
-                                    borderColor: borderColors[borderColorIndex],
+                                    borderColor: BORDER_COLORS[borderColorIndex],
                                     transform: [{ rotate: glowRotateInterpolate }]
                                 }
                             ]} />
@@ -355,7 +281,7 @@ function Landing() {
                                 styles.counter,
                                 dynamicStyles.counter,
                                 {
-                                    borderColor: borderColors[borderColorIndex]
+                                    borderColor: BORDER_COLORS[borderColorIndex]
                                 }
                             ]}>
                                 {/* Inner gradient background */}
@@ -366,10 +292,10 @@ function Landing() {
                                 </View>
 
                                 {/* Corner accents */}
-                                <View style={[styles.cornerAccent, styles.topLeft, { backgroundColor: borderColors[borderColorIndex] }]} />
-                                <View style={[styles.cornerAccent, styles.topRight, { backgroundColor: borderColors[borderColorIndex] }]} />
-                                <View style={[styles.cornerAccent, styles.bottomLeft, { backgroundColor: borderColors[borderColorIndex] }]} />
-                                <View style={[styles.cornerAccent, styles.bottomRight, { backgroundColor: borderColors[borderColorIndex] }]} />
+                                <View style={[styles.cornerAccent, styles.topLeft, { backgroundColor: BORDER_COLORS[borderColorIndex] }]} />
+                                <View style={[styles.cornerAccent, styles.topRight, { backgroundColor: BORDER_COLORS[borderColorIndex] }]} />
+                                <View style={[styles.cornerAccent, styles.bottomLeft, { backgroundColor: BORDER_COLORS[borderColorIndex] }]} />
+                                <View style={[styles.cornerAccent, styles.bottomRight, { backgroundColor: BORDER_COLORS[borderColorIndex] }]} />
                             </View>
                         </Animated.View>
                     </View>
@@ -435,6 +361,19 @@ function Landing() {
 }
 
 
+
+// Helpers - Animation
+function startRotationAnimations(glowRotateAnim: Animated.Value) {
+    glowRotateAnim.setValue(0)
+    Animated.loop(
+        Animated.timing(glowRotateAnim, {
+            toValue: 1,
+            duration: 4000, // 4 seconds for full rotation (slightly slower for elegance)
+            useNativeDriver: true,
+        }),
+        { resetBeforeIteration: true }
+    ).start()
+}
 
 const styles = StyleSheet.create({
     main: {
