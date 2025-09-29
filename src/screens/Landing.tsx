@@ -180,7 +180,7 @@ function Landing() {
     // Calculate responsive sizes
     const counterSize = Math.max(minDimension * 0.4, 150)
     const glowSize = counterSize + 60
-    const buttonSize = Math.max(minDimension * 0.15, 60)
+    const buttonSize = Math.max(Math.min(minDimension * 0.2, 80), 64)
 
     // Dynamic styles with proper calculations
     const dynamicStyles = createDynamicStyles({
@@ -314,7 +314,7 @@ function Landing() {
                             onPress={reset}
                             activeOpacity={0.8}
                         >
-                            <Text style={[styles.buttonText, styles.resetButtonText, dynamicStyles.buttonText]}>Reset</Text>
+                            <Text style={[styles.buttonText, styles.resetButtonText, dynamicStyles.buttonText, { color: 'red' }]}>Reset</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
@@ -545,6 +545,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
+        width: '100%',
     },
     button: {
         justifyContent: 'center',
@@ -562,6 +563,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#f44336',
     },
     resetButton: {
+        color: 'red',
         backgroundColor: '#ff9800',
     },
     buttonText: {

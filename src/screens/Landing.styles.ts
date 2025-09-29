@@ -41,22 +41,23 @@ export function createDynamicStyles(params: {
             marginBottom: isLandscape ? 10 : 30,
             paddingHorizontal: width * 0.05,
             flexDirection: 'row' as const,
-            justifyContent: 'space-around' as const,
+            justifyContent: 'center' as const,
             alignItems: 'center' as const,
-            width: '100%',
+            gap: Math.max(buttonSize * 0.25, 20),
         },
         button: {
             width: buttonSize,
             height: buttonSize,
-            borderRadius: buttonSize / 2,
+            borderRadius: 25,
         },
         resetButton: {
             width: buttonSize * 1.4,
             height: buttonSize,
-            borderRadius: buttonSize / 2,
+            borderRadius: 25,
+            
         },
         buttonText: {
-            fontSize: Math.max(buttonSize * 0.3, 16),
+            fontSize: Math.max(buttonSize * 0.32, 16),
         },
         infoContainer: {
             marginTop: isLandscape ? 10 : 20,
