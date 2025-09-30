@@ -80,7 +80,12 @@ function Landing() {
         // Continuous rotation animations
         startRotationAnimations(glowRotateAnim)
 
-        return () => { subscription?.remove(); unsubscribeAuth() }
+        // No hardware volume handling
+
+        return () => {
+            subscription?.remove()
+            unsubscribeAuth()
+        }
     }, [])
 
     const animateCounter = () => {
@@ -328,11 +333,11 @@ function Landing() {
 
                     <View style={[styles.infoContainer, dynamicStyles.infoContainer]}>
                         <View style={[styles.infoItem, dynamicStyles.infoItem]}>
-                            <Text style={styles.infoLabel}>Current</Text>
+                            <Text style={styles.infoLabel}>CURRENT</Text>
                             <Text style={styles.infoValue}>{count}</Text>
                         </View>
                         <View style={[styles.infoItem, dynamicStyles.infoItem]}>
-                            <Text style={styles.infoLabel}>Status</Text>
+                            <Text style={styles.infoLabel}>STATUS</Text>
                             <Text style={styles.infoValue}>
                                 {count === 0 ? 'Zero' : count > 0 ? 'Positive' : 'Negative'}
                             </Text>
@@ -551,20 +556,23 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 8 },
-        shadowOpacity: 0.3,
-        shadowRadius: 12,
-        elevation: 8,
+        shadowOffset: { width: 0, height: 12 },
+        shadowOpacity: 0.35,
+        shadowRadius: 14,
+        elevation: 12,
     },
     incrementButton: {
         backgroundColor: '#4CAF50',
+        shadowColor: '#4CAF50',
     },
     decrementButton: {
         backgroundColor: '#f44336',
+        shadowColor: '#f44336',
     },
     resetButton: {
         color: 'red',
         backgroundColor: '#ff9800',
+        shadowColor: '#ff9800',
     },
     buttonText: {
         color: '#ffffff',
@@ -694,7 +702,7 @@ const styles = StyleSheet.create({
         marginBottom: 25,
     },
     formTitle: {
-        fontSize: 24,
+        fontSize: 28,
         fontWeight: '700',
         color: '#2c3e50',
         fontFamily: Platform.OS === 'ios' ? 'Helvetica-Bold' : 'Roboto-Bold',
