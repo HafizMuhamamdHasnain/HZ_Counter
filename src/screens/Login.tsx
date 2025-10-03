@@ -15,6 +15,8 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { GoogleSignin, statusCodes, GoogleSigninButton } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
+import LinearGradient from 'react-native-linear-gradient';
+import SystemSetting from "react-native-system-setting";
 
 
 function Login() {
@@ -100,110 +102,117 @@ function Login() {
 
 
   return (
-    <KeyboardAvoidingView
+    <LinearGradient
+      colors={['#0F4C3A', '#1a472a', '#2E8B57', '#32CD32']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
       style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <View style={styles.overlay} />
-      <View style={styles.islamicPattern} />
-      <ScrollView
-        contentContainerStyle={styles.scrollContainer}
-        showsVerticalScrollIndicator={false}
+      <KeyboardAvoidingView
+        style={styles.keyboardAvoidingView}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        {/* <Image
+        <View style={styles.overlay} />
+        <View style={styles.islamicPattern} />
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          showsVerticalScrollIndicator={false}
+        >
+          {/* <Image
             source={require('../../src/assets/counter-high-resolution-logo-transparent.png')}
           /> */}
 
-        <View style={styles.header}>
-          <View style={styles.iconContainer}>
-            <View style={styles.kalmaTop}>
-              <Text style={styles.kalmaText}>لَا إِلَٰهَ إِلَّا ٱللَّٰهُ</Text>
+          <View style={styles.header}>
+            <View style={styles.iconContainer}>
+              <View style={styles.kalmaTop}>
+                <Text style={styles.kalmaText}>لَا إِلَٰهَ إِلَّا ٱللَّٰهُ</Text>
+              </View>
+              <View style={styles.kalmaLeft}>
+                <Text style={styles.kalmaTextVertical}>مُحَمَّدٌ</Text>
+              </View>
+              <Text style={styles.icon}>🕌</Text>
+              <View style={styles.kalmaRight}>
+                <Text style={styles.kalmaTextVertical}>رَسُولُ ٱللَّٰهِ</Text>
+              </View>
+              <View style={styles.kalmaBottom}>
+                <Text style={styles.kalmaText}>مُحَمَّدٌ رَسُولُ ٱللَّٰهِ</Text>
+              </View>
             </View>
-            <View style={styles.kalmaLeft}>
-              <Text style={styles.kalmaTextVertical}>مُحَمَّدٌ</Text>
-            </View>
-            <Text style={styles.icon}>🕌</Text>
-            <View style={styles.kalmaRight}>
-              <Text style={styles.kalmaTextVertical}>رَسُولُ ٱللَّٰهِ</Text>
-            </View>
-            <View style={styles.kalmaBottom}>
-              <Text style={styles.kalmaText}>مُحَمَّدٌ رَسُولُ ٱللَّٰهِ</Text>
-            </View>
+
+            <Text style={styles.title}>مَرْحَبًا</Text>
+            <Text style={styles.subtitle}>Welcome back to the community</Text>
           </View>
 
-          <Text style={styles.title}>مَرْحَبًا</Text>
-          <Text style={styles.subtitle}>Welcome back to the community</Text>
-        </View>
-
-        <View style={styles.formCard}>
-          <View style={styles.formHeader}>
-            <Text style={styles.formTitle}>بِسْمِ ٱللَّٰهِ</Text>
-            <Text style={styles.formSubtitle}>Sign in to continue</Text>
-          </View>
-
-          <View style={styles.form}>
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>📧 Email Address</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Enter email address"
-                value={formData.email}
-                onChangeText={value => handleInputChange('email', value)}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                placeholderTextColor="#bdc3c7"
-              />
+          <View style={styles.formCard}>
+            <View style={styles.formHeader}>
+              <Text style={styles.formTitle}>بِسْمِ ٱللَّٰهِ</Text>
+              <Text style={styles.formSubtitle}>Sign in to continue</Text>
             </View>
 
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>🔒 Password</Text>
-              <View style={styles.passwordContainer}>
+            <View style={styles.form}>
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>📧 Email Address</Text>
                 <TextInput
-                  style={styles.passwordInput}
-                  placeholder="Enter password"
-                  value={formData.password}
-                  onChangeText={value => handleInputChange('password', value)}
-                  secureTextEntry={!showPassword}
+                  style={styles.input}
+                  placeholder="Enter email address"
+                  value={formData.email}
+                  onChangeText={value => handleInputChange('email', value)}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
                   placeholderTextColor="#bdc3c7"
                 />
-                <TouchableOpacity
-                  style={styles.eyeButton}
-                  onPress={() => setShowPassword(!showPassword)}
-                >
-                  <Text style={styles.eyeText}>
-                    {showPassword ? '👁️' : '👁️‍🗨️'}
-                  </Text>
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>🔒 Password</Text>
+                <View style={styles.passwordContainer}>
+                  <TextInput
+                    style={styles.passwordInput}
+                    placeholder="Enter password"
+                    value={formData.password}
+                    onChangeText={value => handleInputChange('password', value)}
+                    secureTextEntry={!showPassword}
+                    placeholderTextColor="#bdc3c7"
+                  />
+                  <TouchableOpacity
+                    style={styles.eyeButton}
+                    onPress={() => setShowPassword(!showPassword)}
+                  >
+                    <Text style={styles.eyeText}>
+                      {showPassword ? '👁️' : '👁️‍🗨️'}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              <TouchableOpacity style={styles.signInButton} onPress={handleLogin}>
+                <Text style={styles.signInButtonText}>🕌 Sign In</Text>
+              </TouchableOpacity>
+
+              <View style={styles.dividerContainer}>
+                <View style={styles.dividerLine} />
+                <Text style={styles.dividerText}>or</Text>
+                <View style={styles.dividerLine} />
+              </View>
+
+              <TouchableOpacity style={styles.googleButton} onPress={handleGoogleLogin}>
+                <View style={styles.googleIconContainer}>
+                  <Text style={styles.googleIcon}>G</Text>
+                </View>
+                <Text style={styles.googleButtonText}>Continue with Google</Text>
+              </TouchableOpacity>
+
+              <View style={styles.loginContainer}>
+                <Text style={styles.loginText}>Don't have an account? </Text>
+                <TouchableOpacity onPress={() => navigation.navigate('SingUp')}>
+                  <Text style={styles.loginLink}>Create Account</Text>
                 </TouchableOpacity>
               </View>
             </View>
-
-            <TouchableOpacity style={styles.signInButton} onPress={handleLogin}>
-              <Text style={styles.signInButtonText}>🕌 Sign In</Text>
-            </TouchableOpacity>
-
-            <View style={styles.dividerContainer}>
-              <View style={styles.dividerLine} />
-              <Text style={styles.dividerText}>or</Text>
-              <View style={styles.dividerLine} />
-            </View>
-
-            <TouchableOpacity style={styles.googleButton} onPress={handleGoogleLogin}>
-              <View style={styles.googleIconContainer}>
-                <Text style={styles.googleIcon}>G</Text>
-              </View>
-              <Text style={styles.googleButtonText}>Continue with Google</Text>
-            </TouchableOpacity>
-
-            <View style={styles.loginContainer}>
-              <Text style={styles.loginText}>Don't have an account? </Text>
-              <TouchableOpacity onPress={() => navigation.navigate('SingUp')}>
-                <Text style={styles.loginLink}>Create Account</Text>
-              </TouchableOpacity>
-            </View>
           </View>
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </LinearGradient>
   );
 }
 
@@ -212,7 +221,9 @@ export default Login;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1a472a',
+  },
+  keyboardAvoidingView: {
+    flex: 1,
   },
   overlay: {
     position: 'absolute',
@@ -220,7 +231,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    backgroundColor: 'rgba(255, 255, 255, 0.02)',
   },
   islamicPattern: {
     position: 'absolute',
@@ -228,7 +239,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(26, 71, 42, 0.1)',
+    backgroundColor: 'rgba(26, 71, 42, 0.05)',
   },
   scrollContainer: {
     flexGrow: 1,

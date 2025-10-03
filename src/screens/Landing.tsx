@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
+import LinearGradient from 'react-native-linear-gradient'
 import { createDynamicStyles } from './Landing.styles.ts'
 
 // Array of Islamic-themed border colors that cycle through
@@ -210,158 +211,165 @@ function Landing() {
     }
 
     return (
-        <KeyboardAvoidingView
+        <LinearGradient
+            colors={['#0F4C3A', '#1a472a', '#2E8B57', '#32CD32']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
             style={styles.main}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
-            <View style={styles.overlay} />
-            <View style={styles.islamicPattern} />
-            <ScrollView
-                contentContainerStyle={styles.scrollContainer}
-                showsVerticalScrollIndicator={false}
+            <KeyboardAvoidingView
+                style={styles.keyboardAvoidingView}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             >
-                <View style={styles.header}>
-                    <View style={styles.headerTop}>
-                        <View style={styles.headerSpacer} />
-                        <TouchableOpacity
-                            style={styles.logoutButtonTop}
-                            onPress={handleLogout}
-                        >
-                            <Text style={styles.logoutButtonText}>🚪 LogOut</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.iconContainer}>
-                        <View style={styles.kalmaTop}>
-                            <Text style={styles.kalmaText}>لَا إِلَٰهَ إِلَّا ٱللَّٰهُ</Text>
+                <View style={styles.overlay} />
+                <View style={styles.islamicPattern} />
+                <ScrollView
+                    contentContainerStyle={styles.scrollContainer}
+                    showsVerticalScrollIndicator={false}
+                >
+                    <View style={styles.header}>
+                        <View style={styles.headerTop}>
+                            <View style={styles.headerSpacer} />
+                            <TouchableOpacity
+                                style={styles.logoutButtonTop}
+                                onPress={handleLogout}
+                            >
+                                <Text style={styles.logoutButtonText}>🚪 Log Out</Text>
+                            </TouchableOpacity>
                         </View>
-                        <View style={styles.kalmaLeft}>
-                            <Text style={styles.kalmaTextVertical}>مُحَمَّدٌ</Text>
-                        </View>
-                        <Text style={styles.icon}>🕌</Text>
-                        <View style={styles.kalmaRight}>
-                            <Text style={styles.kalmaTextVertical}>رَسُولُ ٱللَّٰهِ</Text>
-                        </View>
-                        <View style={styles.kalmaBottom}>
-                            <Text style={styles.kalmaText}>مُحَمَّدٌ رَسُولُ ٱللَّٰهِ</Text>
-                        </View>
-                    </View>
-                    <Text style={styles.title}>ٱلسَّلَامُ عَلَيْكُمْ</Text>
-                    {userName ? (
-                        <Text style={styles.userNameText} numberOfLines={1} ellipsizeMode='tail'>
-                            Welcome, {userName}
-                        </Text>
-                    ) : <Text style={styles.subtitle}>Welcome to our blessed community</Text>
-                    }
-
-                </View>
-
-                <View style={styles.formCard}>
-                    <View style={styles.formHeader}>
-                        <Text style={styles.formTitle}>بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</Text>
-                    </View>
-
-                    <View style={styles.counterWrapper}>
-                        <Animated.View
-                            style={[
-                                styles.counterContainer,
-                                dynamicStyles.counterContainer,
-                                {
-                                    opacity: fadeAnim,
-                                    transform: [{ translateY: slideAnim }, { scale: scaleAnim }]
-                                }
-                            ]}
-                        >
-                            {/* Outer glow ring with rotation */}
-                            <Animated.View style={[
-                                styles.glowRing,
-                                dynamicStyles.glowRing,
-                                {
-                                    borderColor: BORDER_COLORS[borderColorIndex],
-                                    transform: [{ rotate: glowRotateInterpolate }]
-                                }
-                            ]} />
-
-                            {/* Main counter - now stationary */}
-                            <View style={[
-                                styles.counter,
-                                dynamicStyles.counter,
-                                {
-                                    borderColor: BORDER_COLORS[borderColorIndex]
-                                }
-                            ]}>
-                                {/* Inner gradient background */}
-                                <View style={styles.innerHex}>
-                                    <Text style={[styles.counterText, dynamicStyles.counterText]}>
-                                        {count}
-                                    </Text>
-                                </View>
-
-                                {/* Corner accents */}
-                                <View style={[styles.cornerAccent, styles.topLeft, { backgroundColor: BORDER_COLORS[borderColorIndex] }]} />
-                                <View style={[styles.cornerAccent, styles.topRight, { backgroundColor: BORDER_COLORS[borderColorIndex] }]} />
-                                <View style={[styles.cornerAccent, styles.bottomLeft, { backgroundColor: BORDER_COLORS[borderColorIndex] }]} />
-                                <View style={[styles.cornerAccent, styles.bottomRight, { backgroundColor: BORDER_COLORS[borderColorIndex] }]} />
+                        <View style={styles.iconContainer}>
+                            <View style={styles.kalmaTop}>
+                                <Text style={styles.kalmaText}>لَا إِلَٰهَ إِلَّا ٱللَّٰهُ</Text>
                             </View>
-                        </Animated.View>
-                    </View>
-
-                    <View style={[styles.buttonContainer, dynamicStyles.buttonContainer]}>
-                        <TouchableOpacity
-                            style={[styles.button, styles.decrementButton, dynamicStyles.button]}
-                            onPress={decrement}
-                            activeOpacity={0.8}
-                        >
-                            <Text style={[styles.buttonText, dynamicStyles.buttonText]}>−</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            style={[styles.button, styles.resetButton, dynamicStyles.resetButton]}
-                            onPress={reset}
-                            activeOpacity={0.8}
-                        >
-                            <Text style={[styles.buttonText, styles.resetButtonText, dynamicStyles.buttonText, { color: 'red' }]}>Reset</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            style={[styles.button, styles.incrementButton, dynamicStyles.button]}
-                            onPress={increment}
-                            activeOpacity={0.8}
-                        >
-                            <Text style={[styles.buttonText, dynamicStyles.buttonText]}>+</Text>
-                        </TouchableOpacity>
-                    </View>
-
-                    <View style={[styles.infoContainer, dynamicStyles.infoContainer]}>
-                        <View style={[styles.infoItem, dynamicStyles.infoItem]}>
-                            <Text style={styles.infoLabel}>CURRENT</Text>
-                            <Text style={styles.infoValue}>{count}</Text>
+                            <View style={styles.kalmaLeft}>
+                                <Text style={styles.kalmaTextVertical}>مُحَمَّدٌ</Text>
+                            </View>
+                            <Text style={styles.icon}>🕌</Text>
+                            <View style={styles.kalmaRight}>
+                                <Text style={styles.kalmaTextVertical}>رَسُولُ ٱللَّٰهِ</Text>
+                            </View>
+                            <View style={styles.kalmaBottom}>
+                                <Text style={styles.kalmaText}>مُحَمَّدٌ رَسُولُ ٱللَّٰهِ</Text>
+                            </View>
                         </View>
-                        <View style={[styles.infoItem, dynamicStyles.infoItem]}>
-                            <Text style={styles.infoLabel}>STATUS</Text>
-                            <Text style={styles.infoValue}>
-                                {count === 0 ? 'Zero' : count > 0 ? 'Positive' : 'Negative'}
+                        <Text style={styles.title}>ٱلسَّلَامُ عَلَيْكُمْ</Text>
+                        {userName ? (
+                            <Text style={styles.userNameText} numberOfLines={1} ellipsizeMode='tail'>
+                                Welcome, {userName}
                             </Text>
+                        ) : <Text style={styles.subtitle}>Welcome to our blessed community</Text>
+                        }
+
+                    </View>
+
+                    <View style={styles.formCard}>
+                        <View style={styles.formHeader}>
+                            <Text style={styles.formTitle}>بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</Text>
+                        </View>
+
+                        <View style={styles.counterWrapper}>
+                            <Animated.View
+                                style={[
+                                    styles.counterContainer,
+                                    dynamicStyles.counterContainer,
+                                    {
+                                        opacity: fadeAnim,
+                                        transform: [{ translateY: slideAnim }, { scale: scaleAnim }]
+                                    }
+                                ]}
+                            >
+                                {/* Outer glow ring with rotation */}
+                                <Animated.View style={[
+                                    styles.glowRing,
+                                    dynamicStyles.glowRing,
+                                    {
+                                        borderColor: BORDER_COLORS[borderColorIndex],
+                                        transform: [{ rotate: glowRotateInterpolate }]
+                                    }
+                                ]} />
+
+                                {/* Main counter - now stationary */}
+                                <View style={[
+                                    styles.counter,
+                                    dynamicStyles.counter,
+                                    {
+                                        borderColor: BORDER_COLORS[borderColorIndex]
+                                    }
+                                ]}>
+                                    {/* Inner gradient background */}
+                                    <View style={styles.innerHex}>
+                                        <Text style={[styles.counterText, dynamicStyles.counterText]}>
+                                            {count}
+                                        </Text>
+                                    </View>
+
+                                    {/* Corner accents */}
+                                    <View style={[styles.cornerAccent, styles.topLeft, { backgroundColor: BORDER_COLORS[borderColorIndex] }]} />
+                                    <View style={[styles.cornerAccent, styles.topRight, { backgroundColor: BORDER_COLORS[borderColorIndex] }]} />
+                                    <View style={[styles.cornerAccent, styles.bottomLeft, { backgroundColor: BORDER_COLORS[borderColorIndex] }]} />
+                                    <View style={[styles.cornerAccent, styles.bottomRight, { backgroundColor: BORDER_COLORS[borderColorIndex] }]} />
+                                </View>
+                            </Animated.View>
+                        </View>
+
+                        <View style={[styles.buttonContainer, dynamicStyles.buttonContainer]}>
+                            <TouchableOpacity
+                                style={[styles.button, styles.decrementButton, dynamicStyles.button]}
+                                onPress={decrement}
+                                activeOpacity={0.8}
+                            >
+                                <Text style={[styles.buttonText, dynamicStyles.buttonText]}>−</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={[styles.button, styles.resetButton, dynamicStyles.resetButton]}
+                                onPress={reset}
+                                activeOpacity={0.8}
+                            >
+                                <Text style={[styles.buttonText, styles.resetButtonText, dynamicStyles.buttonText, { color: 'red' }]}>Reset</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={[styles.button, styles.incrementButton, dynamicStyles.button]}
+                                onPress={increment}
+                                activeOpacity={0.8}
+                            >
+                                <Text style={[styles.buttonText, dynamicStyles.buttonText]}>+</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        <View style={[styles.infoContainer, dynamicStyles.infoContainer]}>
+                            <View style={[styles.infoItem, dynamicStyles.infoItem]}>
+                                <Text style={styles.infoLabel}>CURRENT</Text>
+                                <Text style={styles.infoValue}>{count}</Text>
+                            </View>
+                            <View style={[styles.infoItem, dynamicStyles.infoItem]}>
+                                <Text style={styles.infoLabel}>STATUS</Text>
+                                <Text style={styles.infoValue}>
+                                    {count === 0 ? 'Zero' : count > 0 ? 'Positive' : 'Negative'}
+                                </Text>
+                            </View>
+                        </View>
+
+                        <View style={[styles.navigationContainer, dynamicStyles.navigationContainer]}>
+                            <TouchableOpacity
+                                style={styles.navButton}
+                                onPress={() => navigation.navigate('Login')}
+                            >
+                                <Text style={styles.navButtonText}>🕌 SignUp  In </Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={styles.navButton}
+                                onPress={() => navigation.navigate('SingUp')}
+                            >
+                                <Text style={styles.navButtonText}>📝 Create Account</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
-
-                    <View style={[styles.navigationContainer, dynamicStyles.navigationContainer]}>
-                        <TouchableOpacity
-                            style={styles.navButton}
-                            onPress={() => navigation.navigate('Login')}
-                        >
-                            <Text style={styles.navButtonText}>🕌 SignUp  In </Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            style={styles.navButton}
-                            onPress={() => navigation.navigate('SingUp')}
-                        >
-                            <Text style={styles.navButtonText}>📝 Create Account</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </ScrollView>
-        </KeyboardAvoidingView>
+                </ScrollView>
+            </KeyboardAvoidingView>
+        </LinearGradient>
     )
 }
 
@@ -383,7 +391,9 @@ function startRotationAnimations(glowRotateAnim: Animated.Value) {
 const styles = StyleSheet.create({
     main: {
         flex: 1,
-        backgroundColor: '#1a472a', // Islamic green
+    },
+    keyboardAvoidingView: {
+        flex: 1,
     },
     overlay: {
         position: 'absolute',
@@ -391,7 +401,7 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+        backgroundColor: 'rgba(255, 255, 255, 0.02)',
     },
     islamicPattern: {
         position: 'absolute',
@@ -399,7 +409,7 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: 'rgba(26, 71, 42, 0.1)',
+        backgroundColor: 'rgba(26, 71, 42, 0.05)',
     },
     scrollContainer: {
         flexGrow: 1,
