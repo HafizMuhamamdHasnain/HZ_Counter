@@ -143,7 +143,12 @@ function Login() {
             <Text style={styles.subtitle}>Welcome back to the community</Text>
           </View>
 
-          <View style={styles.formCard}>
+          <LinearGradient
+            colors={['#fffbe6', '#f7e8ff', '#e0f7fa']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.formCard}
+          >
             <View style={styles.formHeader}>
               <Text style={styles.formTitle}>بِسْمِ ٱللَّٰهِ</Text>
               <Text style={styles.formSubtitle}>Sign in to continue</Text>
@@ -174,7 +179,7 @@ function Login() {
                     secureTextEntry={!showPassword}
                     placeholderTextColor="#bdc3c7"
                   />
-                  <TouchableOpacity
+                  <TouchableOpacity 
                     style={styles.eyeButton}
                     onPress={() => setShowPassword(!showPassword)}
                   >
@@ -185,9 +190,16 @@ function Login() {
                 </View>
               </View>
 
-              <TouchableOpacity style={styles.signInButton} onPress={handleLogin}>
+              <LinearGradient
+                colors={['#1a472a', '#32CD32']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.signInButton}
+                // @ts-ignore
+                onTouchEnd={handleLogin}
+              >
                 <Text style={styles.signInButtonText}>🕌 Sign In</Text>
-              </TouchableOpacity>
+              </LinearGradient>
 
               <View style={styles.dividerContainer}>
                 <View style={styles.dividerLine} />
@@ -195,11 +207,18 @@ function Login() {
                 <View style={styles.dividerLine} />
               </View>
 
-              <TouchableOpacity style={styles.googleButton} onPress={handleGoogleLogin}>
-                <View style={styles.googleIconContainer}>
-                  <Text style={styles.googleIcon}>G</Text>
-                </View>
-                <Text style={styles.googleButtonText}>Continue with Google</Text>
+              <TouchableOpacity onPress={handleGoogleLogin} activeOpacity={0.85}>
+                <LinearGradient
+                  colors={['#b2f0ff', '#5ec6e7']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.googleButton}
+                >
+                  <View style={styles.googleIconContainer}>
+                    <Text style={styles.googleIcon}>G</Text>
+                  </View>
+                  <Text style={styles.googleButtonText}>Continue with Google</Text>
+                </LinearGradient>
               </TouchableOpacity>
 
               <View style={styles.loginContainer}>
@@ -209,7 +228,7 @@ function Login() {
                 </TouchableOpacity>
               </View>
             </View>
-          </View>
+          </LinearGradient>
         </ScrollView>
       </KeyboardAvoidingView>
     </LinearGradient>

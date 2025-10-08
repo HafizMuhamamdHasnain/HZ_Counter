@@ -12,6 +12,8 @@ import {
   Dimensions,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native'
+import LinearGradient from 'react-native-linear-gradient'
+
 
 function SingUp() {
   const navigation = useNavigation<any>()
@@ -63,6 +65,12 @@ function SingUp() {
   };
 
   return (
+    <LinearGradient
+            colors={['#0F4C3A', '#1a472a', '#2E8B57', '#32CD32']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.main}
+    >
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -109,7 +117,12 @@ function SingUp() {
           </View>
         </View>
 
-        <View style={styles.formCard}>
+        <LinearGradient
+          colors={['#fffbe6', '#f7e8ff', '#e0f7fa']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.formCard}
+        >
           <View style={styles.formHeader}>
             <Text style={styles.formTitle}>بِسْمِ ٱللَّٰهِ</Text>
             <Text style={styles.formSubtitle}>Begin your blessed journey with us</Text>
@@ -206,9 +219,17 @@ function SingUp() {
               </View>
             </View>
 
-            <TouchableOpacity style={styles.signUpButton} onPress={handleSignUp}>
+            <LinearGradient 
+              colors={['#1a472a', '#32CD32']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.signUpButton}
+              // Apply onPress directly to LinearGradient
+              // @ts-ignore
+              onTouchEnd={handleSignUp}
+            >
               <Text style={styles.signUpButtonText}>🕌 Join Our Ummah</Text>
-            </TouchableOpacity>
+            </LinearGradient>
 
             <View style={styles.benefitsContainer}>
               <Text style={styles.benefitsTitle}>Barakallahu feeki - You'll receive:</Text>
@@ -235,18 +256,21 @@ function SingUp() {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
+        </LinearGradient>
       </ScrollView>
     </KeyboardAvoidingView>
+    </LinearGradient>
   );
 }
 
 export default SingUp;
 
 const styles = StyleSheet.create({
+  main: {
+    flex: 1,
+  },
   container: {
     flex: 1,
-    backgroundColor: '#1a472a', // Islamic green
   },
   overlay: {
     position: 'absolute',

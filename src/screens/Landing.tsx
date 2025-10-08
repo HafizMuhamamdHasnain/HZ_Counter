@@ -262,7 +262,12 @@ function Landing() {
 
                     </View>
 
-                    <View style={styles.formCard}>
+                    <LinearGradient
+                        colors={['#fffbe6', '#f7e8ff', '#e0f7fa']}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                        style={styles.formCard}
+                    >
                         <View style={styles.formHeader}>
                             <Text style={styles.formTitle}>بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</Text>
                         </View>
@@ -313,29 +318,44 @@ function Landing() {
                         </View>
 
                         <View style={[styles.buttonContainer, dynamicStyles.buttonContainer]}>
-                            <TouchableOpacity
+                            {/* Decrement Button with Red Gradient */}
+                            <LinearGradient
+                                colors={['#ff5858', '#ff0000']}
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 1, y: 1 }}
                                 style={[styles.button, styles.decrementButton, dynamicStyles.button]}
-                                onPress={decrement}
-                                activeOpacity={0.8}
+                                onTouchEnd={decrement}
                             >
-                                <Text style={[styles.buttonText, dynamicStyles.buttonText]}>−</Text>
-                            </TouchableOpacity>
+                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                    <Text style={[styles.buttonText, dynamicStyles.buttonText]}>−</Text>
+                                </View>
+                            </LinearGradient>
 
-                            <TouchableOpacity
+                            {/* Reset Button with Orange Gradient */}
+                            <LinearGradient
+                                colors={['#ffb347', '#ff8300']}
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 1, y: 1 }}
                                 style={[styles.button, styles.resetButton, dynamicStyles.resetButton]}
-                                onPress={reset}
-                                activeOpacity={0.8}
+                                onTouchEnd={reset}
                             >
-                                <Text style={[styles.buttonText, styles.resetButtonText, dynamicStyles.buttonText, { color: 'red' }]}>Reset</Text>
-                            </TouchableOpacity>
+                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                    <Text style={[styles.buttonText, styles.resetButtonText, dynamicStyles.buttonText, { color: 'white' }]}>Reset</Text>
+                                </View>
+                            </LinearGradient>
 
-                            <TouchableOpacity
+                            {/* Increment Button with Green Gradient */}
+                            <LinearGradient
+                                colors={['#32CD32', '#228B22']}
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 1, y: 1 }}
                                 style={[styles.button, styles.incrementButton, dynamicStyles.button]}
-                                onPress={increment}
-                                activeOpacity={0.8}
+                                onTouchEnd={increment}
                             >
-                                <Text style={[styles.buttonText, dynamicStyles.buttonText]}>+</Text>
-                            </TouchableOpacity>
+                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                    <Text style={[styles.buttonText, dynamicStyles.buttonText]}>+</Text>
+                                </View>
+                            </LinearGradient>
                         </View>
 
                         <View style={[styles.infoContainer, dynamicStyles.infoContainer]}>
@@ -352,21 +372,31 @@ function Landing() {
                         </View>
 
                         <View style={[styles.navigationContainer, dynamicStyles.navigationContainer]}>
-                            <TouchableOpacity
+                            <LinearGradient
+                                colors={['#4fc3f7', '#1976d2']}
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 1, y: 1 }}
                                 style={styles.navButton}
-                                onPress={() => navigation.navigate('Login')}
+                                onTouchEnd={() => navigation.navigate('Login')}
                             >
-                                <Text style={styles.navButtonText}>🕌 SignUp  In </Text>
-                            </TouchableOpacity>
+                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                    <Text style={styles.navButtonText}>🕌 SignUp  In </Text>
+                                </View>
+                            </LinearGradient>
 
-                            <TouchableOpacity
+                            <LinearGradient
+                                colors={['#4fc3f7', '#1976d2']}
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 1, y: 1 }}
                                 style={styles.navButton}
-                                onPress={() => navigation.navigate('SingUp')}
+                                onTouchEnd={() => navigation.navigate('SingUp')}
                             >
-                                <Text style={styles.navButtonText}>📝 Create Account</Text>
-                            </TouchableOpacity>
+                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                    <Text style={styles.navButtonText}>📝 Create Account</Text>
+                                </View>
+                            </LinearGradient>
                         </View>
-                    </View>
+                    </LinearGradient>
                 </ScrollView>
             </KeyboardAvoidingView>
         </LinearGradient>
@@ -394,6 +424,7 @@ const styles = StyleSheet.create({
     },
     keyboardAvoidingView: {
         flex: 1,
+        // backgroundColor: '#1a472a', // Islamic green
     },
     overlay: {
         position: 'absolute',
@@ -435,23 +466,27 @@ const styles = StyleSheet.create({
         backgroundColor: '#1a472a',
         borderRadius: 8,
         borderWidth: 2,
-        borderColor: 'rgba(255, 215, 0, 0.6)',
+        borderColor: '#FFD700',
         paddingVertical: 8,
-        paddingHorizontal: 12,
-        shadowColor: 'rgba(255, 215, 0, 0.6)',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.3,
+        paddingHorizontal: 16,
+        alignItems: 'center',
+        justifyContent: 'center',
+        shadowColor: '#FFD700',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 4,
+        minWidth: 90,
     },
     logoutButtonText: {
-        color: 'rgba(255, 215, 0, 0.6)',
-        fontSize: 14,
-        fontWeight: '600',
-        fontFamily: Platform.OS === 'ios' ? 'Helvetica-Medium' : 'Roboto-Medium',
+        color: '#FFD700',
+        fontSize: 16,
+        fontWeight: '700',
+        fontFamily: Platform.OS === 'ios' ? 'Helvetica-Bold' : 'Roboto-Bold',
+        letterSpacing: 0.5,
+        textShadowColor: 'rgba(0,0,0,0.15)',
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 2,
     },
     title: {
         fontSize: 36,
