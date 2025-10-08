@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from '../screens/Login';
 import SingUp from '../screens/Singup';
 import Landing from '../screens/Landing';
+import PrayerTimes from '../screens/PrayerTimes';
 
 const Stack = createNativeStackNavigator();
 
@@ -30,6 +31,11 @@ const AppNavigation = () => {
             options={{ headerShown: false }}
             name="Landing"
             component={Landing}
+          />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="PrayerTimes"
+            component={PrayerTimes}
           />
         </Stack.Navigator>
       </NavigationContainer>

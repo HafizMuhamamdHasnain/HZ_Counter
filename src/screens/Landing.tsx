@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View, Animated, useColorScheme, Dimensions, ScrollView, KeyboardAvoidingView, Platform, Alert } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, Animated, useColorScheme, Dimensions, ScrollView, KeyboardAvoidingView, Platform, Alert, Image } from 'react-native'
 import React, { useState, useRef, useEffect } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
@@ -234,7 +234,7 @@ function Landing() {
                                 style={styles.logoutButtonTop}
                                 onPress={handleLogout}
                             >
-                                <Text style={styles.logoutButtonText}>🚪 Log Out</Text>
+                                <Text style={styles.logoutButtonText}>🚪LogOut</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={styles.iconContainer}>
@@ -268,11 +268,17 @@ function Landing() {
                         end={{ x: 1, y: 1 }}
                         style={styles.formCard}
                     >
-                        <View style={styles.formHeader}>
+                        {/* Kaaba watermark - Single large */}
+                        <View style={styles.kaabaWatermark}>
+                            <Text style={styles.kaabaText}>🕋</Text>
+                            {/* <Text style={styles.kaabaText}>🕋</Text> */}
+                            {/* <Text style={styles.kaabaText}>🕋</Text> */}
+                        </View>
+                        <View style={[styles.formHeader, { zIndex: 1 }]}>
                             <Text style={styles.formTitle}>بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</Text>
                         </View>
 
-                        <View style={styles.counterWrapper}>
+                        <View style={[styles.counterWrapper, { zIndex: 1 }]}>
                             <Animated.View
                                 style={[
                                     styles.counterContainer,
@@ -317,12 +323,12 @@ function Landing() {
                             </Animated.View>
                         </View>
 
-                        <View style={[styles.buttonContainer, dynamicStyles.buttonContainer]}>
+                        <View style={[styles.buttonContainer, dynamicStyles.buttonContainer, { zIndex: 1 }]}>
                             {/* Decrement Button with Red Gradient */}
                             <LinearGradient
                                 colors={['#ff5858', '#ff0000']}
-                                start={{ x: 0, y: 0 }}
-                                end={{ x: 1, y: 1 }}
+                                start={{ x: 1, y: 0 }}
+                                end={{ x: 0, y: 0 }}
                                 style={[styles.button, styles.decrementButton, dynamicStyles.button]}
                                 onTouchEnd={decrement}
                             >
@@ -334,21 +340,21 @@ function Landing() {
                             {/* Reset Button with Orange Gradient */}
                             <LinearGradient
                                 colors={['#ffb347', '#ff8300']}
-                                start={{ x: 0, y: 0 }}
-                                end={{ x: 1, y: 1 }}
+                                start={{ x: 1, y: 0 }}
+                                end={{ x: 0, y: 0 }}
                                 style={[styles.button, styles.resetButton, dynamicStyles.resetButton]}
                                 onTouchEnd={reset}
                             >
                                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                    <Text style={[styles.buttonText, styles.resetButtonText, dynamicStyles.buttonText, { color: 'white' }]}>Reset</Text>
+                                    <Text style={[styles.buttonText, styles.resetButtonText, dynamicStyles.buttonText, { color: 'red' }]}>Reset</Text>
                                 </View>
                             </LinearGradient>
 
                             {/* Increment Button with Green Gradient */}
                             <LinearGradient
                                 colors={['#32CD32', '#228B22']}
-                                start={{ x: 0, y: 0 }}
-                                end={{ x: 1, y: 1 }}
+                                start={{ x: 1, y: 0 }}
+                                end={{ x: 0, y: 0 }}
                                 style={[styles.button, styles.incrementButton, dynamicStyles.button]}
                                 onTouchEnd={increment}
                             >
@@ -358,7 +364,7 @@ function Landing() {
                             </LinearGradient>
                         </View>
 
-                        <View style={[styles.infoContainer, dynamicStyles.infoContainer]}>
+                        {/* <View style={[styles.infoContainer, dynamicStyles.infoContainer]}>
                             <View style={[styles.infoItem, dynamicStyles.infoItem]}>
                                 <Text style={styles.infoLabel}>CURRENT</Text>
                                 <Text style={styles.infoValue}>{count}</Text>
@@ -369,9 +375,9 @@ function Landing() {
                                     {count === 0 ? 'Zero' : count > 0 ? 'Positive' : 'Negative'}
                                 </Text>
                             </View>
-                        </View>
+                        </View> */}
 
-                        <View style={[styles.navigationContainer, dynamicStyles.navigationContainer]}>
+                        <View style={[styles.navigationContainer, dynamicStyles.navigationContainer, { zIndex: 1 }]}>
                             <LinearGradient
                                 colors={['#4fc3f7', '#1976d2']}
                                 start={{ x: 0, y: 0 }}
@@ -393,6 +399,21 @@ function Landing() {
                             >
                                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                     <Text style={styles.navButtonText}>📝 Create Account</Text>
+                                </View>
+                            </LinearGradient>
+                        </View>
+
+                        {/* Prayer Times Button */}
+                        <View style={[styles.prayerTimesContainer, { zIndex: 1 }]}>
+                            <LinearGradient
+                                colors={['#FFD700', '#FFA500']}
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 1, y: 1 }}
+                                style={styles.prayerTimesButton}
+                                onTouchEnd={() => navigation.navigate('PrayerTimes')}
+                            >
+                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                    <Text style={styles.prayerTimesButtonText}>🕐 Prayer Times</Text>
                                 </View>
                             </LinearGradient>
                         </View>
@@ -741,6 +762,26 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         shadowRadius: 20,
         elevation: 15,
+        overflow: 'hidden',
+        position: 'relative',
+    },
+    kaabaWatermark: {
+        position: 'absolute',
+        top: -140,
+        left: 15,
+        right: 0,
+        bottom: 0,
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 0,
+    },
+    kaabaText: {
+        fontSize: 325,
+        opacity: 0.2,
+        // transform: [{ rotate: '-10deg' }],
+        color: '#1a472a',
     },
     formHeader: {
         alignItems: 'center',
@@ -790,6 +831,33 @@ const styles = StyleSheet.create({
     navButtonText: {
         color: '#ffffff',
         fontSize: 16,
+        fontWeight: '700',
+        fontFamily: Platform.OS === 'ios' ? 'Helvetica-Bold' : 'Roboto-Bold',
+        letterSpacing: 0.5,
+        textAlign: 'center',
+    },
+    prayerTimesContainer: {
+        marginTop: 20,
+        paddingHorizontal: 20,
+    },
+    prayerTimesButton: {
+        backgroundColor: '#FFD700',
+        borderRadius: 12,
+        paddingVertical: 16,
+        alignItems: 'center',
+        justifyContent: 'center',
+        shadowColor: '#FFD700',
+        shadowOffset: {
+            width: 0,
+            height: 4,
+        },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+        elevation: 8,
+    },
+    prayerTimesButtonText: {
+        color: '#1a472a',
+        fontSize: 18,
         fontWeight: '700',
         fontFamily: Platform.OS === 'ios' ? 'Helvetica-Bold' : 'Roboto-Bold',
         letterSpacing: 0.5,

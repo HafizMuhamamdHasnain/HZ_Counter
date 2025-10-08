@@ -28,6 +28,7 @@ function Login() {
     password: '',
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
   useEffect(() => {
     GoogleSignin.configure({
@@ -68,17 +69,20 @@ function Login() {
   };
 
   const handleGoogleLogin = async () => {
+    setIsGoogleLoading(true);
     try {
       await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
       const result = await GoogleSignin.signIn();
 
       if (result.type !== 'success') {
+        setIsGoogleLoading(false);
         return;
       }
 
       const { idToken } = result.data;
       if (!idToken) {
         Alert.alert('Google Sign-In', 'No idToken returned');
+        setIsGoogleLoading(false);
         return;
       }
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
@@ -86,16 +90,21 @@ function Login() {
       navigation.navigate('Landing');
     } catch (error: any) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        setIsGoogleLoading(false);
         return;
       }
       if (error.code === statusCodes.IN_PROGRESS) {
+        setIsGoogleLoading(false);
         return;
       }
       if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
         Alert.alert('Google Play Services', 'Not available or outdated');
+        setIsGoogleLoading(false);
         return;
       }
       Alert.alert('Google Sign-In Error', error?.message ?? 'Unknown error');
+    } finally {
+      setIsGoogleLoading(false);
     }
   };
 
@@ -179,7 +188,7 @@ function Login() {
                     secureTextEntry={!showPassword}
                     placeholderTextColor="#bdc3c7"
                   />
-                  <TouchableOpacity 
+                  <TouchableOpacity
                     style={styles.eyeButton}
                     onPress={() => setShowPassword(!showPassword)}
                   >
@@ -207,17 +216,27 @@ function Login() {
                 <View style={styles.dividerLine} />
               </View>
 
-              <TouchableOpacity onPress={handleGoogleLogin} activeOpacity={0.85}>
+              <TouchableOpacity
+                onPress={handleGoogleLogin}
+                activeOpacity={0.85}
+                disabled={isGoogleLoading}
+              >
                 <LinearGradient
-                  colors={['#b2f0ff', '#5ec6e7']}
+                  colors={isGoogleLoading ? ['#1a472a', '#2E8B57'] : ['#b2f0ff', '#5ec6e7']}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 1 }}
-                  style={styles.googleButton}
+                  style={[styles.googleButton, isGoogleLoading && styles.googleButtonDisabled]}
                 >
                   <View style={styles.googleIconContainer}>
-                    <Text style={styles.googleIcon}>G</Text>
+                    {isGoogleLoading ? (
+                      <Text style={styles.loadingSpinner}>⟳</Text>
+                    ) : (
+                      <Text style={styles.googleIcon}>G</Text>
+                    )}
                   </View>
-                  <Text style={styles.googleButtonText}>Continue with Google</Text>
+                  <Text style={[styles.googleButtonText, isGoogleLoading && styles.googleButtonTextDisabled]}>
+                    {isGoogleLoading ? 'Signing in...' : 'Continue with Google'}
+                  </Text>
                 </LinearGradient>
               </TouchableOpacity>
 
@@ -537,5 +556,21 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     fontFamily: Platform.OS === 'ios' ? 'Helvetica-Medium' : 'Roboto-Medium',
     letterSpacing: 0.3,
+  },
+  googleButtonDisabled: {
+    opacity: 1,
+  },
+  googleButtonTextDisabled: {
+    color: '#FFD700',
+    fontWeight: '700',
+  },
+  loadingSpinner: {
+    fontSize: 22,
+    fontWeight: '900',
+    color: '#FFD700',
+    fontFamily: Platform.OS === 'ios' ? 'Helvetica-Bold' : 'Roboto-Bold',
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 3,
   },
 });
