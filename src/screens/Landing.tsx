@@ -249,7 +249,7 @@ function Landing() {
                                 <Text style={styles.kalmaTextVertical}>رَسُولُ ٱللَّٰهِ</Text>
                             </View>
                             <View style={styles.kalmaBottom}>
-                                <Text style={styles.kalmaText}>مُحَمَّدٌ رَسُولُ ٱللَّٰهِ</Text>
+                                <Text style={styles.kalmaText}>مُحَمَّدٌ رَسُولُ  ٱللَّٰهِ</Text>
                             </View>
                         </View>
                         <Text style={styles.title}>ٱلسَّلَامُ عَلَيْكُمْ</Text>
